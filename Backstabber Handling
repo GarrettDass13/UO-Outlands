@@ -3,6 +3,8 @@
 @setvar! weapon_equipped 0
 //Set below to 1 if you want to use armored wizards hat. Make sure you aspect it.
 @setvar! wizardHatHandling 1
+//Set 1 if you want to auto drop gold if you get too heavy
+@setvar! autoDropGold 1
 
 if not find 'headgear' 'self'
     overhead 'Target your headgear.'
@@ -115,5 +117,14 @@ if counttype "gold coin" backpack as total
 	if 18000 < total
 	overhead "Warning: {{total}} gold!" 34
 endif
-
+//Drop gold if overweight	#Yottawatts 8/13/2022	#Note: 50 gold coins is 1 stone
+if insysmsg 'You are overweight' and autoDropGold = 1
+	if findtype 'gold coin' backpack as Coin
+	    lift Coin 5000
+	    if findtype 'gold coin' ground -1 -1 2 as GroundCoin
+	       drop 'GroundCoin' -1 -1 1 
+	       endif
+	       droprelloc 0 0
+	#droprelloc drops the gold at your feet it no stack found
+	endif
 loop
