@@ -121,10 +121,12 @@ endif
 if insysmsg 'You are overloaded' and autoDropGold = 1
 	if findtype 'gold coin' backpack as Coin
 	    lift Coin 5000
+	    wait 100
 	    if findtype 'gold coin' ground -1 -1 2 as GroundCoin
 	       drop 'GroundCoin' -1 -1 1 
-	       endif
-	       droprelloc 0 0
+	    endif
+	    droprelloc 0 0
 	#droprelloc drops the gold at your feet it no stack found
 	endif
+endif
 loop
