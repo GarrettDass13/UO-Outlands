@@ -118,7 +118,7 @@ if counttype "gold coin" backpack as total
 	overhead "Warning: {{total}} gold!" 34
 endif
 //Drop gold if overweight	#Yottawatts 8/13/2022	#Note: 50 gold coins is 1 stone
-if insysmsg 'You are overweight' and autoDropGold = 1
+if insysmsg 'You are overloaded' and autoDropGold = 1
 	if findtype 'gold coin' backpack as Coin
 	    lift Coin 5000
 	    if findtype 'gold coin' ground -1 -1 2 as GroundCoin
