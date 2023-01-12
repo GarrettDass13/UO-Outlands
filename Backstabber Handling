@@ -1,14 +1,17 @@
+#NOTES - Must set disarm to be 'Disarm mode will not untoggle after any disarm attempts' via [DisarmUntoggleMode
+#NOTES - Will drop weapon to pot regardless of razor auto-unequip settings
+#NOTES - Don't have timer on heal pots yet: todo list
 //Set variables
 
 @setvar! weapon_equipped 0
 //Set below to 1 if you want to use armored wizards hat. Make sure you aspect it.
 @setvar! wizardHatHandling 1
-//Set 1 if you want to auto drop gold if you get too heavy
+//Set 1 blow if you want to auto drop gold if you get too heavy
 @setvar! autoDropGold 1
-//Set 1 if you want to change finisher with swords
+//Set 1 blow if you want to change finisher with swords. Logic here is bleed on backstab = huge execute, otherwise just stick with bleed out.
 @setvar! swordFinisherDance 1
 
-if not find 'headgear' 'self'
+if not find 'headgear' 'self' and wizardHatHandling = 1
     overhead 'Target your headgear.'
     pause 200
     setvar 'headgear' 
@@ -37,7 +40,7 @@ if insysmsg 'You are overloaded' and autoDropGold = 1
     clearsysmsg
 endif
 
-//Disarm hit/miss set vars
+//Disarm hit/miss set vars triggers
 
 if insysmsg 'Your strike disarms your'
     @setvar weWantToDisarm 1
@@ -61,7 +64,7 @@ endif
 
 //finisherDance
 if swordFinisherDance = 1 and insysmsg 'You strike your target from the shadows' and insysmsg 'Your attack causes your target to bleed' 
-    overhead 'Triggered off of bleed + backstab??'
+    overhead 'SWAPPED TO EXECUTE FOR BACKSTAB BLEED'
     say '[SwordsFinisher2'
     @setvar swordsFinisherOnExecute 1
 endif
@@ -87,7 +90,7 @@ while hidden 'self'
         @setvar disarmOn 1
     elseif insysmsg 'You may now attempt to disarm your opponent again'
         @setvar weWantToDisarm 1
-        @setvar disarmReady 1
+        @setvar disarmOn 1
     elseif insysmsg 'You refrain from making disarm'
         @setvar weWantToDisarm 1
     elseif insysmsg 'You feel ready to continue stealthing'
@@ -120,7 +123,8 @@ if wizardHatHandling = 1
 endif
 endwhile
 
-//Healing
+//Healing/Curing
+# Gated behind not being hidden - WILL NOT HEAL IF HIDDEN. 
 if not hidden
     if hp < 45
         if not lhandempty
@@ -150,7 +154,7 @@ endif
 if not findbuff "food" and findtype "tray" backpack as jood
     dclick jood
 endif
-//Gold warning adjust accordingly
+//Gold warning adjust accordingly - turned this off, don't have a spam gate for it and don't really care
 #if counttype "gold coin" backpack as total
 #	if 18000 < total
 #	overhead "Warning: {{total}} gold!" 34
