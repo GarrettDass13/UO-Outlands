@@ -1,0 +1,82 @@
+//Set variables
+
+@setvar! weapon_equipped 0
+
+if not find 'wield_weapon' 'self'
+    overhead 'Set weapon'
+    setvar 'wield_weapon'
+endif
+
+if insysmsg 'Your strike disarms your'
+        @setvar weWantToDisarm 1
+		@setvar disarmOn 0
+    elseif insysmsg 'You fail to disarm'
+        @setvar weWantToDisarm 1
+		@setvar disarmOn 0
+endif
+wait 250
+ 
+if not hidden and disarmOn = 1
+    say '[disarm'
+	wait 150
+    if insysmsg 'You refrain from making disarm'
+    @setvar disarmOn 0
+	endif
+	wait 500
+endif
+
+while hidden 'self'
+    if insysmsg 'You will now attempt to disarm your opponents'
+        @setvar weWantToDisarm 0
+        @setvar disarmOn 1
+    elseif insysmsg 'You may now attempt to disarm your opponent again'
+        @setvar weWantToDisarm 1
+        @setvar disarmReady 1
+    elseif insysmsg 'You refrain from making disarm'
+        @setvar weWantToDisarm 1
+    elseif insysmsg 'You feel ready to continue stealthing'
+        if weWantToDisarm = 1
+            say '[disarm'
+        endif
+    elseif weWantToDisarm = 1
+            say '[disarm'
+    endif
+    wait 250
+    if lhandempty and rhandempty
+        overhead 'No weapon equipt retard'
+        wait 2000
+        dclick wield_weapon
+    endif
+endwhile
+
+//Healing
+if not hidden
+	if hp < 45
+		if not lhandempty
+			hotkey "Arm/Disarm Left Hand"
+		endif
+		wait 250
+		hotkey 'Drink Heal'
+	endif
+
+	if poisoned
+		if findtype "Orange Potion" backpack as pot
+			if not lhandempty or rhandempty
+				overhead "Unwield weapon"
+					if findlayer self lefthand as found
+						@setvar! weapon_equipped found
+						lift weapon_equipped
+						drop backpack
+						wait 250
+					endif  
+			endif
+				dclick pot
+				wait 250
+			endif
+	endif
+endif
+//Let's eat if we have it
+if not findbuff "food" and findtype "tray" backpack as jood
+    dclick jood
+endif
+loop
