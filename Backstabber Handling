@@ -11,7 +11,7 @@ if not find 'headgear' 'self'
 endif
 
 if not find 'wield_weapon' 'self'
-    overhead 'Set weapon'
+    overhead 'Set your primary weapon'
     setvar 'wield_weapon'
 endif
 //////////////////-----------------------
@@ -37,7 +37,7 @@ if not hidden and disarmOn = 1
     if insysmsg 'You refrain from making disarm'
     @setvar disarmOn 0
 	endif
-	wait 500
+	wait 250
 endif
 
 while hidden 'self'
@@ -65,19 +65,19 @@ while hidden 'self'
         dclick wield_weapon
     endif
 //Wizardhat swapping
-	if wizardHatHandling = 1
-		if findtype '5912' 'self' as hat
-			if stam == maxstam
-				if timer 'hatTimer' > 2000
-				settimer 'hatTimer' 0
-				dclick hat
-				pause 350
-				dclick 'headgear'
-				pause 350
-				endif
+if wizardHatHandling = 1
+	if findtype '5912' 'self' as hat
+		if stam == maxstam
+			if timer 'hatTimer' > 2000
+			settimer 'hatTimer' 0
+			dclick hat
+			pause 350
+			dclick 'headgear'
+			pause 350
 			endif
 		endif
 	endif
+endif
 endwhile
 
 //Healing
