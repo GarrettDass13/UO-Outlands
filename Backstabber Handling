@@ -151,10 +151,10 @@ if not findbuff "food" and findtype "tray" backpack as jood
     dclick jood
 endif
 //Gold warning adjust accordingly
-if counttype "gold coin" backpack as total
-	if 18000 < total
-	overhead "Warning: {{total}} gold!" 34
-	endif
-endif
+#if counttype "gold coin" backpack as total
+#	if 18000 < total
+#	overhead "Warning: {{total}} gold!" 34
+#	endif
+#endif
 
 loop
