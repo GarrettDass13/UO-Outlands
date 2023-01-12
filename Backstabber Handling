@@ -1,4 +1,4 @@
-#NOTES - Must set disarm to be 'Disarm mode will not untoggle after any disarm attempts' via [DisarmUntoggleMode
+#NOTES - Must set disarm to be 'Disarm mode will NOW untoggle after ANY disarm attempts' via [DisarmUntoggleMode
 #NOTES - Will drop weapon to pot regardless of razor auto-unequip settings
 #NOTES - Don't have timer on heal pots yet: todo list
 //Set variables
