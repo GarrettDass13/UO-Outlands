@@ -59,6 +59,7 @@ endif
 if swordFinisherDance = 1 and insysmsg 'You strike your target from the shadows' and insysmsg 'Your attack causes your target to bleed' 
 	overhead 'Triggered off of bleed + backstab??'
 	say '[SwordsFinisher2'
+	@setvar swordsFinisherOnExecute 1
 clearsysmsg
 endif
 if insysmsg 'You execute your target' and swordFinisherDance = 1
@@ -68,8 +69,12 @@ endif
 while hidden 'self'
 //finisherDance
 	if insysmsg 'You deactivate your finisher' and swordFinisherDance = 1
-	say '[SwordsFinisher1'
-	wait 250
+		say '[SwordsFinisher1'
+		wait 250
+	endif
+	if swordsFinisherOnExecute = 1 and swordFinisherDance = 1
+		say '[SwordsFinisher1'
+		@setvar swordsFinisherOnExecute 0
 	endif
 //Disarm toggling
     if insysmsg 'You will now attempt to disarm your opponents'
