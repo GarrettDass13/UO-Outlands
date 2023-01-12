@@ -1,7 +1,9 @@
 //Set variables
 
 @setvar! weapon_equipped 0
+//Set below to 1 if you want to use armored wizards hat. Make sure you aspect it.
 @setvar! wizardHatHandling 1
+
 if not find 'headgear' 'self'
     overhead 'Target your headgear.'
     pause 200
@@ -12,6 +14,7 @@ if not find 'wield_weapon' 'self'
     overhead 'Set weapon'
     setvar 'wield_weapon'
 endif
+//////////////////-----------------------
 //Set Timers
 if not timerexists 'hatTimer'
     settimer 'hatTimer' 0
