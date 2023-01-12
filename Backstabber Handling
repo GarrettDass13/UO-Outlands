@@ -23,60 +23,64 @@ endif
 if not timerexists 'hatTimer'
     settimer 'hatTimer' 0
 endif
-//Drop Gold if overweight
+
+//Drop Gold when overweight
 if insysmsg 'You are overloaded' and autoDropGold = 1
     if findtype 'gold coin' backpack as item
         lift item 2500
         droprelloc 0 0
         wait 200
-	endif
+    endif
     if insysmsg 'cannot drop anything'
         drop backpack -1 -1 -1
     endif
     clearsysmsg
 endif
+
 //Disarm hit/miss set vars
+
 if insysmsg 'Your strike disarms your'
-        @setvar weWantToDisarm 1
-	@setvar disarmOn 0
+    @setvar weWantToDisarm 1
+    @setvar disarmOn 0
     elseif insysmsg 'You fail to disarm'
-        @setvar weWantToDisarm 1
-	@setvar disarmOn 0
+    @setvar weWantToDisarm 1
+    @setvar disarmOn 0
 endif
+
 wait 250
 
 //Don't disarm while unhidden
 if not hidden and disarmOn = 1
     say '[disarm'
-	wait 150
-    if insysmsg 'You refrain from making disarm'
+    wait 150
+endif
+if insysmsg 'You refrain from making disarm'
     @setvar disarmOn 0
-	endif
-	wait 250
+    wait 250
 endif
 
 //finisherDance
 if swordFinisherDance = 1 and insysmsg 'You strike your target from the shadows' and insysmsg 'Your attack causes your target to bleed' 
-	overhead 'Triggered off of bleed + backstab??'
-	say '[SwordsFinisher2'
-	@setvar swordsFinisherOnExecute 1
-clearsysmsg
+    overhead 'Triggered off of bleed + backstab??'
+    say '[SwordsFinisher2'
+    @setvar swordsFinisherOnExecute 1
 endif
+clearsysmsg
 if insysmsg 'You execute your target' and swordFinisherDance = 1
-	say '[SwordsFinisher1'
+    say '[SwordsFinisher1'
 endif
 
 while hidden 'self'
 //finisherDance
-	if insysmsg 'You deactivate your finisher' and swordFinisherDance = 1
-		say '[SwordsFinisher1'
-		wait 100
-	endif
-	if swordsFinisherOnExecute = 1 and swordFinisherDance = 1
-		say '[SwordsFinisher1'
-		@setvar swordsFinisherOnExecute 0
-		wait 100
-	endif
+    if insysmsg 'You deactivate your finisher' and swordFinisherDance = 1
+        say '[SwordsFinisher1'
+        wait 100
+    endif
+    if swordsFinisherOnExecute = 1 and swordFinisherDance = 1
+        say '[SwordsFinisher1'
+        @setvar swordsFinisherOnExecute 0
+        wait 100
+    endif
 //Disarm toggling
     if insysmsg 'You will now attempt to disarm your opponents'
         @setvar weWantToDisarm 0
@@ -96,52 +100,51 @@ while hidden 'self'
     wait 250
 //Rearm weapon    
     if lhandempty and rhandempty
-        overhead 'No weapon equipt retard'
+        overhead 'No weapon equipt fool'
         wait 1000
         dclick wield_weapon
     endif
 //Wizardhat swapping
 if wizardHatHandling = 1
-	if findtype '5912' 'self' as hat
-		if stam == maxstam
-			if timer 'hatTimer' > 2000
-			settimer 'hatTimer' 0
-			dclick hat
-			pause 350
-			dclick 'headgear'
-			pause 350
-			endif
-		endif
-	endif
+        if findtype '5912' 'self' as hat
+            if stam == maxstam
+                if timer 'hatTimer' > 2000
+                settimer 'hatTimer' 0
+                dclick hat
+                pause 350
+                dclick 'headgear'
+                pause 350
+                endif
+            endif
+    endif
 endif
-
 endwhile
 
 //Healing
 if not hidden
-	if hp < 45
-		if not lhandempty
-			hotkey "Arm/Disarm Left Hand"
-		endif
-		wait 250
-		hotkey 'Drink Heal'
-	endif
+    if hp < 45
+        if not lhandempty
+            hotkey "Arm/Disarm Left Hand"
+        endif
+        wait 250
+        hotkey 'Drink Heal'
+    endif
 
-	if poisoned
-		if findtype "Orange Potion" backpack as pot
-			if not lhandempty or rhandempty
-				overhead "Unwield weapon"
-					if findlayer self lefthand as found
-						@setvar! weapon_equipped found
-						lift weapon_equipped
-						drop backpack
-						wait 250
-					endif  
-			endif
-				dclick pot
-				wait 250
-			endif
-	endif
+    if poisoned
+        if findtype "Orange Potion" backpack as pot
+            if not lhandempty or rhandempty
+                overhead "Unwield weapon"
+                    if findlayer self lefthand as found
+                        @setvar! weapon_equipped found
+                        lift weapon_equipped
+                        drop backpack
+                        wait 250
+                    endif  
+            endif
+                dclick pot
+                wait 250
+            endif
+    endif
 endif
 //Let's eat if we have it
 if not findbuff "food" and findtype "tray" backpack as jood
@@ -151,6 +154,7 @@ endif
 if counttype "gold coin" backpack as total
 	if 18000 < total
 	overhead "Warning: {{total}} gold!" 34
+	endif
 endif
 
 loop
