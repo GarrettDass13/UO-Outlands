@@ -1,7 +1,7 @@
 //Set variables
 
 @setvar! weapon_equipped 0
-
+@setvar! wizardHatHandling 1
 if not find 'headgear' 'self'
     overhead 'Target your headgear.'
     pause 200
@@ -58,18 +58,20 @@ while hidden 'self'
 //Rearm weapon    
     if lhandempty and rhandempty
         overhead 'No weapon equipt retard'
-        wait 2000
+        wait 1000
         dclick wield_weapon
     endif
 //Wizardhat swapping
-	if findtype '5912' 'self' as hat
-		if stam == maxstam
-			if timer 'hatTimer' > 2000
-			settimer 'hatTimer' 0
-			dclick hat
-			pause 350
-			dclick 'headgear'
-			pause 350
+	if wizardHatHandling = 1
+		if findtype '5912' 'self' as hat
+			if stam == maxstam
+				if timer 'hatTimer' > 2000
+				settimer 'hatTimer' 0
+				dclick hat
+				pause 350
+				dclick 'headgear'
+				pause 350
+				endif
 			endif
 		endif
 	endif
@@ -105,4 +107,10 @@ endif
 if not findbuff "food" and findtype "tray" backpack as jood
     dclick jood
 endif
+//Gold warning adjust accordingly
+if counttype "gold coin" backpack as total
+	if 18000 < total
+	overhead "Warning: {{total}} gold!" 34
+endif
+
 loop
