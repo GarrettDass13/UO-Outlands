@@ -70,11 +70,12 @@ while hidden 'self'
 //finisherDance
 	if insysmsg 'You deactivate your finisher' and swordFinisherDance = 1
 		say '[SwordsFinisher1'
-		wait 250
+		wait 100
 	endif
 	if swordsFinisherOnExecute = 1 and swordFinisherDance = 1
 		say '[SwordsFinisher1'
 		@setvar swordsFinisherOnExecute 0
+		wait 100
 	endif
 //Disarm toggling
     if insysmsg 'You will now attempt to disarm your opponents'
