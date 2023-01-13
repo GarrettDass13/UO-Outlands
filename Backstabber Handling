@@ -49,6 +49,9 @@ if insysmsg 'Your strike disarms your'
     @setvar weWantToDisarm 1
     @setvar disarmOn 0
 endif
+if insysmsg 'You strike your target from the shadows'
+    @setvar weWantToDisarm 1
+endif
 
 wait 250
 
@@ -57,6 +60,7 @@ if not hidden and disarmOn = 1
     say '[disarm'
     wait 150
 endif
+
 if insysmsg 'You refrain from making disarm'
     @setvar disarmOn 0
     wait 250
@@ -93,11 +97,8 @@ while hidden 'self'
         @setvar disarmOn 1
     elseif insysmsg 'You refrain from making disarm'
         @setvar weWantToDisarm 1
-    elseif insysmsg 'You feel ready to continue stealthing'
-        if weWantToDisarm = 1
-            say '[disarm'
-        endif
-    elseif weWantToDisarm = 1
+        @setvar disarmOn 0
+    elseif weWantToDisarm = 1 and disarmOn = 0
             say '[disarm'
     endif
     wait 250
