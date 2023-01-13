@@ -159,3 +159,165 @@ endif
 #   endif
 #endif
 loop
+#NOTES - Must set disarm to be 'Disarm mode will NOW untoggle after ANY disarm attempts' via [DisarmUntoggleMode
+#NOTES - Will drop weapon to pot regardless of razor auto-unequip settings
+#NOTES - Don't have timer on heal pots yet: todo list
+//Set variables
+
+@setvar! weapon_equipped 0
+//Set below to 1 if you want to use armored wizards hat. Make sure you aspect it.
+@setvar! wizardHatHandling 1
+//Set 1 blow if you want to auto drop gold if you get too heavy
+@setvar! autoDropGold 1
+//Set 1 blow if you want to change finisher with swords. Logic here is bleed on backstab = huge execute, otherwise just stick with bleed out.
+@setvar! swordFinisherDance 1
+
+if not find 'headgear' 'self' and wizardHatHandling = 1
+    overhead 'Target your headgear.'
+    pause 200
+    setvar 'headgear' 
+endif
+
+if not find 'wield_weapon' 'self'
+    overhead 'Set your primary weapon'
+    setvar 'wield_weapon'
+endif
+//////////////////-----------------------
+//Set Timers
+if not timerexists 'hatTimer'
+    settimer 'hatTimer' 0
+endif
+
+//Drop Gold when overweight
+if insysmsg 'You are overloaded' and autoDropGold = 1
+    if findtype 'gold coin' backpack as item
+        lift item 2500
+        droprelloc 0 0
+        wait 200
+    endif
+    if insysmsg 'cannot drop anything'
+        drop backpack -1 -1 -1
+    endif
+endif
+
+//Disarm hit/miss set vars triggers
+
+if insysmsg 'Your strike disarms your'
+    @setvar disarmOn 0
+    elseif insysmsg 'You fail to disarm'
+    @setvar disarmOn 0
+endif
+
+wait 250
+
+//Don't disarm while unhidden
+if not hidden and disarmOn = 1
+    say '[disarm'
+    wait 150
+endif
+
+if insysmsg 'You refrain from making disarm'
+    @setvar disarmOn 0
+    wait 250
+endif
+if insysmsg 'You strike your target'
+    @setvar weWantToDisarm 1
+endif
+//finisherDance
+if swordFinisherDance = 1 and insysmsg 'from the shadows' and insysmsg 'Your attack causes your target to bleed' 
+    overhead 'Swapping to execute'
+    say '[SwordsFinisher2'
+    @setvar swordsFinisherOnExecute 1
+endif
+
+if insysmsg 'You execute your target' and swordFinisherDance = 1
+    say '[SwordsFinisher1'
+endif
+
+
+while hidden 'self'
+//finisherDance
+     if insysmsg 'You deactivate your finisher' and swordFinisherDance = 1
+        say '[SwordsFinisher1'
+        wait 100
+    endif
+    if swordsFinisherOnExecute = 1 and swordFinisherDance = 1
+        say '[SwordsFinisher1'
+        @setvar swordsFinisherOnExecute 0
+        wait 100
+    endif
+//Disarm toggling
+    if insysmsg 'You will now attempt to disarm your opponents'
+        @setvar weWantToDisarm 0
+        wait 100
+ //   elseif insysmsg 'You may now attempt to disarm your opponent again'
+ //       @setvar disarmOn 1
+    elseif insysmsg 'You refrain from making disarm'
+        @setvar weWantToDisarm 1
+        @setvar disarmOn 0
+    elseif weWantToDisarm = 1 and disarmOn = 0
+        say '[disarm'
+        @setvar weWantToDisarm 0
+        wait 100
+    endif
+    wait 250
+//Rearm weapon    
+    if lhandempty and rhandempty
+        overhead 'No weapon equipt fool'
+        wait 1000
+        dclick wield_weapon
+    endif
+//Wizardhat swapping
+if wizardHatHandling = 1
+        if findtype '5912' 'self' as hat
+            if stam == maxstam
+                if timer 'hatTimer' > 2000
+                settimer 'hatTimer' 0
+                dclick hat
+                pause 350
+                dclick 'headgear'
+                pause 350
+                endif
+            endif
+    endif
+endif
+endwhile
+
+//Healing/Curing
+# Gated behind not being hidden - WILL NOT HEAL IF HIDDEN. 
+if not hidden
+    if hp < 45
+        if not lhandempty
+            hotkey "Arm/Disarm Left Hand"
+        endif
+        wait 250
+        hotkey 'Drink Heal'
+    endif
+
+    if poisoned
+        if findtype "Orange Potion" backpack as pot
+            if not lhandempty or rhandempty
+                overhead "Unwield weapon"
+                    if findlayer self lefthand as found
+                        @setvar! weapon_equipped found
+                        lift weapon_equipped
+                        drop backpack
+                        wait 250
+                    endif  
+            endif
+                dclick pot
+                wait 250
+            endif
+    endif
+endif
+//Let's eat if we have it
+if not findbuff "food" and findtype "tray" backpack as jood
+    dclick jood
+endif
+//Gold warning adjust accordingly - turned this off, don't have a spam gate for it and don't really care
+#if counttype "gold coin" backpack as total
+#   if 18000 < total
+#   overhead "Warning: {{total}} gold!" 34
+#   endif
+#endif
+loop
