@@ -64,7 +64,7 @@ if insysmsg 'You refrain from making disarm'
 endif
 
 //finisherDance
-if swordFinisherDance = 1 and insysmsg 'You strike your target from the shadows' and insysmsg 'Your attack causes your target to bleed' 
+if swordFinisherDance = 1 and insysmsg 'from the shadows' and insysmsg 'Your attack causes your target to bleed' 
     overhead 'Swapping to execute'
     say '[SwordsFinisher2'
     @setvar swordsFinisherOnExecute 1
@@ -75,7 +75,7 @@ if insysmsg 'You execute your target' and swordFinisherDance = 1
     say '[SwordsFinisher1'
 endif
 
-if insysmsg 'You strike your target from the shadows'
+if insysmsg 'You strike your target'
     @setvar weWantToDisarm 1
 endif
 while hidden 'self'
