@@ -37,13 +37,16 @@ if insysmsg 'You are overloaded' and autoDropGold = 1
     if insysmsg 'cannot drop anything'
         drop backpack -1 -1 -1
     endif
+    clearsysmsg
 endif
 
 //Disarm hit/miss set vars triggers
 
 if insysmsg 'Your strike disarms your'
+    @setvar weWantToDisarm 1
     @setvar disarmOn 0
     elseif insysmsg 'You fail to disarm'
+    @setvar weWantToDisarm 1
     @setvar disarmOn 0
 endif
 
@@ -54,29 +57,27 @@ if not hidden and disarmOn = 1
     say '[disarm'
     wait 150
 endif
-
 if insysmsg 'You refrain from making disarm'
     @setvar disarmOn 0
     wait 250
 endif
-if insysmsg 'You strike your target'
-    @setvar weWantToDisarm 1
-endif
+
 //finisherDance
-if swordFinisherDance = 1 and insysmsg 'from the shadows' and insysmsg 'Your attack causes your target to bleed' 
-    overhead 'Swapping to execute'
+if swordFinisherDance = 1 and insysmsg 'You strike your target' and insysmsg 'Your attack causes your target to bleed' 
+    overhead 'SWAPPED TO EXECUTE FOR BACKSTAB BLEED'
     say '[SwordsFinisher2'
     @setvar swordsFinisherOnExecute 1
 endif
-
 if insysmsg 'You execute your target' and swordFinisherDance = 1
     say '[SwordsFinisher1'
 endif
-
+if insysmsg 'from the shadows'
+	weWantToDisarm 1
+endif
 
 while hidden 'self'
 //finisherDance
-     if insysmsg 'You deactivate your finisher' and swordFinisherDance = 1
+    if insysmsg 'You deactivate your finisher' and swordFinisherDance = 1
         say '[SwordsFinisher1'
         wait 100
     endif
@@ -88,16 +89,18 @@ while hidden 'self'
 //Disarm toggling
     if insysmsg 'You will now attempt to disarm your opponents'
         @setvar weWantToDisarm 0
-        wait 100
- //   elseif insysmsg 'You may now attempt to disarm your opponent again'
- //       @setvar disarmOn 1
+        @setvar disarmOn 1
+    elseif insysmsg 'You may now attempt to disarm your opponent again'
+        @setvar weWantToDisarm 1
+        @setvar disarmOn 1
     elseif insysmsg 'You refrain from making disarm'
         @setvar weWantToDisarm 1
-        @setvar disarmOn 0
-    elseif weWantToDisarm = 1 and disarmOn = 0
-        say '[disarm'
-        @setvar weWantToDisarm 0
-        wait 100
+    elseif insysmsg 'You feel ready to continue stealthing'
+        if weWantToDisarm = 1
+            say '[disarm'
+        endif
+    elseif weWantToDisarm = 1
+            say '[disarm'
     endif
     wait 250
 //Rearm weapon    
@@ -159,4 +162,5 @@ endif
 #   overhead "Warning: {{total}} gold!" 34
 #   endif
 #endif
+
 loop
