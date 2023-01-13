@@ -59,24 +59,24 @@ if insysmsg 'You refrain from making disarm'
     @setvar disarmOn 0
     wait 250
 endif
-
+if insysmsg 'You strike your target'
+    @setvar weWantToDisarm 1
+endif
 //finisherDance
 if swordFinisherDance = 1 and insysmsg 'from the shadows' and insysmsg 'Your attack causes your target to bleed' 
     overhead 'Swapping to execute'
     say '[SwordsFinisher2'
     @setvar swordsFinisherOnExecute 1
-    clearsysmsg
 endif
 
 if insysmsg 'You execute your target' and swordFinisherDance = 1
     say '[SwordsFinisher1'
 endif
 
-if insysmsg 'You strike your target'
-    @setvar weWantToDisarm 1
-endif
+
 while hidden 'self'
 //finisherDance
+ 
     if insysmsg 'You deactivate your finisher' and swordFinisherDance = 1
         say '[SwordsFinisher1'
         wait 100
@@ -89,15 +89,14 @@ while hidden 'self'
 //Disarm toggling
     if insysmsg 'You will now attempt to disarm your opponents'
         @setvar weWantToDisarm 0
-        @setvar disarmOn 1
     elseif insysmsg 'You may now attempt to disarm your opponent again'
         @setvar weWantToDisarm 1
-        @setvar disarmOn 1
     elseif insysmsg 'You refrain from making disarm'
         @setvar weWantToDisarm 1
         @setvar disarmOn 0
     elseif weWantToDisarm = 1 and disarmOn = 0
-            say '[disarm'
+        say '[disarm'
+        @setvar weWantToDisarm 0            
     endif
     wait 250
 //Rearm weapon    
@@ -159,5 +158,4 @@ endif
 #   overhead "Warning: {{total}} gold!" 34
 #   endif
 #endif
-
 loop
