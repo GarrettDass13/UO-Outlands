@@ -10,7 +10,7 @@
 @setvar! autoDropGold 1
 //Set 1 blow if you want to change finisher with swords. Logic here is bleed on backstab = huge execute, otherwise just stick with bleed out.
 @setvar! swordFinisherDance 1
-
+clearsysmsg
 if not find 'headgear' 'self' and wizardHatHandling = 1
     overhead 'Target your headgear.'
     pause 200
