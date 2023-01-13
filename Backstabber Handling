@@ -46,9 +46,6 @@ if insysmsg 'Your strike disarms your'
     elseif insysmsg 'You fail to disarm'
     @setvar disarmOn 0
 endif
-if insysmsg 'You strike your target from the shadows'
-    @setvar weWantToDisarm 1
-endif
 
 wait 250
 
