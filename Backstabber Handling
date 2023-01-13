@@ -37,16 +37,13 @@ if insysmsg 'You are overloaded' and autoDropGold = 1
     if insysmsg 'cannot drop anything'
         drop backpack -1 -1 -1
     endif
-    clearsysmsg
 endif
 
 //Disarm hit/miss set vars triggers
 
 if insysmsg 'Your strike disarms your'
-    @setvar weWantToDisarm 1
     @setvar disarmOn 0
     elseif insysmsg 'You fail to disarm'
-    @setvar weWantToDisarm 1
     @setvar disarmOn 0
 endif
 if insysmsg 'You strike your target from the shadows'
@@ -68,15 +65,19 @@ endif
 
 //finisherDance
 if swordFinisherDance = 1 and insysmsg 'You strike your target from the shadows' and insysmsg 'Your attack causes your target to bleed' 
-    overhead 'SWAPPED TO EXECUTE FOR BACKSTAB BLEED'
+    overhead 'Swapping to execute'
     say '[SwordsFinisher2'
     @setvar swordsFinisherOnExecute 1
+    clearsysmsg
 endif
-clearsysmsg
+
 if insysmsg 'You execute your target' and swordFinisherDance = 1
     say '[SwordsFinisher1'
 endif
 
+if insysmsg 'You strike your target from the shadows'
+    @setvar weWantToDisarm 1
+endif
 while hidden 'self'
 //finisherDance
     if insysmsg 'You deactivate your finisher' and swordFinisherDance = 1
@@ -157,9 +158,9 @@ if not findbuff "food" and findtype "tray" backpack as jood
 endif
 //Gold warning adjust accordingly - turned this off, don't have a spam gate for it and don't really care
 #if counttype "gold coin" backpack as total
-#	if 18000 < total
-#	overhead "Warning: {{total}} gold!" 34
-#	endif
+#   if 18000 < total
+#   overhead "Warning: {{total}} gold!" 34
+#   endif
 #endif
 
 loop
